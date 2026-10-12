@@ -23,11 +23,7 @@ export function toBase64Url(bytes: Uint8Array): string {
   return out;
 }
 
-/**
- * Strict, canonical decode: unpadded base64url only, and the unused trailing
- * bits must be zero, so every byte string has exactly one accepted spelling.
- * Returns null on any violation.
- */
+// Strict: no padding, trailing bits must be zero, so each value has one spelling. null if invalid.
 export function fromBase64Url(text: string): Uint8Array | null {
   if (!B64URL.test(text) || text.length % 4 === 1) return null;
   const out = new Uint8Array(Math.floor((text.length * 3) / 4));

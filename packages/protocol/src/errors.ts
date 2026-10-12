@@ -25,11 +25,7 @@ export const ERROR_CODES = [
 export const ErrorCodeSchema = z.enum(ERROR_CODES);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 
-/**
- * What a client is allowed to see. Internal reasons that would let an attacker
- * tell accounts, nonces or factors apart collapse into one generic answer.
- * `satisfies` makes this exhaustive: adding a code without mapping it fails typecheck.
- */
+// What the client sees. Internal reasons collapse to AUTH_FAILED so they can't be used to probe.
 export const PUBLIC_ERROR_CODE = {
   MALFORMED_MESSAGE: 'MALFORMED_MESSAGE',
   UNEXPECTED_STEP: 'UNEXPECTED_STEP',
@@ -54,11 +50,7 @@ export function toPublicErrorCode(code: ErrorCode): ErrorCode {
   return PUBLIC_ERROR_CODE[code];
 }
 
-/**
- * The message is the code and nothing else. It never interpolates received
- * input, and it never keeps zod issues (which can echo a rejected password).
- * Only issue paths and codes are retained, as `issues`.
- */
+// Message is just the code. Never keep zod issues, they can echo a rejected password.
 export class ProtocolError extends Error {
   readonly code: ErrorCode;
   readonly issues: readonly { path: string; code: string }[];
@@ -75,7 +67,7 @@ export class ProtocolError extends Error {
   }
 }
 
-/** Reduce a ZodError to paths and issue codes only, dropping messages and received values. */
+// Paths and codes only, no values.
 export function safeIssues(error: z.ZodError): { path: string; code: string }[] {
   return error.issues.map((i) => ({ path: i.path.map(String).join('.'), code: i.code }));
 }
