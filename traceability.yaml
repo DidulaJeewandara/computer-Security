@@ -1,1 +1,8 @@
 # [JDH] R1-R10 and T1-T8 mapped to the task IDs and test names that discharge them
+
+# P0-RMR-1 — canonical sigma_s encoding and message schemas
+- task: P0-RMR-1
+  discharges: [T3, T4]   # handshake tampering and Lowe-style substitution: signer and verifier parse the signed bytes identically
+  tests:
+    - packages/protocol/src/encode.test.ts   # round trip; no two field triples encode to the same bytes
+    - packages/protocol/src/types.test.ts    # round trip of all six messages; unknown fields rejected
