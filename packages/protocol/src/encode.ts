@@ -3,27 +3,10 @@ import { NOTATION, IMPLEMENTATION_LIMITS } from './constants.js';
 import { utf8DecodeStrict, utf8Encode } from './bytes.js';
 import { ProtocolError } from './errors.js';
 
-/*
- * WIRE FORMAT
- *
- *   encodeFields([f1, ..., fn]) = u32be(len f1) || f1 || ... || u32be(len fn) || fn
- *
- * WHY THIS CANNOT COLLIDE
- *   decodeFields(encodeFields(fs), fs.length) = fs for every list of byte
- *   strings fs (the decoder reads a length, then exactly that many bytes, and
- *   repeats). A function with a left inverse is injective, so two different
- *   field lists can never produce the same bytes. Plain concatenation has no
- *   such inverse: ("ab","c") and ("a","bc") both give "abc". The length prefix
- *   is what makes the boundary between fields part of the signed data.
- *
- * The decoder is strict: it rejects a truncated prefix, a length that runs past
- * the input, a field count other than the one expected, and trailing bytes, so
- * there is exactly one byte string per field list and one field list per
- * accepted byte string.
- *
- * RMR-9: the OTP HMAC input nonce_s2 | U_id | channel has the same ambiguity
- * (U_id is variable length). Build it with encodeFields, not with "|".
- */
+// Format: u32be(len) || field, per field.
+// decode(encode(x)) == x, so two different field lists can never encode the same.
+// Plain concat can: ("ab","c") and ("a","bc") both give "abc".
+// TODO(RMR-9): use encodeFields for the OTP HMAC input too.
 
 const MAX_FIELD_BYTES = 0xffff_ffff;
 
@@ -61,7 +44,7 @@ export function decodeFields(bytes: Uint8Array, expectedCount: number): Uint8Arr
   return fields;
 }
 
-/** The three fields sigma_s covers. Signing the nonce alone is the Lowe weakness. */
+// All three are signed; signing the nonce alone is the Lowe weakness.
 export interface SigmaSPayload {
   nonceU: Uint8Array;
   pkEncKeyU: Uint8Array;
@@ -79,10 +62,7 @@ function validate(p: SigmaSPayload, sIdBytes: Uint8Array): void {
   }
 }
 
-/**
- * Bytes sigma_s signs: LP(nonce_u) || LP(PKEncKey_u) || LP(S_id).
- * Validates before encoding so the signer refuses to sign anything malformed.
- */
+// Validates first so we never sign a malformed payload.
 export function encodeSigmaSPayload(p: SigmaSPayload): Uint8Array {
   const sId = utf8Encode(p.sId);
   validate(p, sId);

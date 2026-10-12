@@ -7,10 +7,7 @@ import { ProtocolError, safeIssues } from './errors.js';
 export * from './constants.js';
 export * from './errors.js';
 
-/**
- * Binary field on the wire: canonical unpadded base64url string <-> Uint8Array,
- * length in [min, max]. A codec, so one schema both decodes and encodes.
- */
+// base64url string <-> bytes, one schema for both directions.
 export function bytesRange(min: number, max: number) {
   const bin = z.custom<Uint8Array>((v) => v instanceof Uint8Array);
   return z.codec(z.string().max(Math.ceil((max * 4) / 3) + 4), bin, {
@@ -54,12 +51,7 @@ export const HelloSchema = z.strictObject({
   pkEncKeyU: bytes(NOTATION.X25519_PUBLIC_KEY_BYTES),
 });
 
-/**
- * 2. s -> u : sigma_s, c1, nonce_s.
- * `signed` is the canonical encoding of (nonce_u, PKEncKey_u, S_id) that sigma_s
- * covers. The client verifies sigma_s over it, decodes it, then compares each
- * field with its own values, so each check can fail separately.
- */
+/** 2. s -> u : sigma_s, c1, nonce_s. `signed` echoes the payload so each client check fails on its own. */
 export const ServerHelloSchema = z.strictObject({
   type: z.literal('server_hello'),
   sigmaS: bytes(NOTATION.SIGMA_S_BYTES),
@@ -89,7 +81,7 @@ export const MessageSchema = z.discriminatedUnion('type', [
   ResultMessageSchema,
 ]);
 
-// ---- decrypted contents (zod-validated at the boundary, per house rules) -----
+// ---- decrypted contents ------------------------------------------------------
 
 export const PasswordPlaintextSchema = z.strictObject({
   password: z.string().min(1).max(IMPLEMENTATION_LIMITS.PASSWORD_MAX_CHARS),
@@ -140,7 +132,7 @@ export type ChallengePlaintext = z.output<typeof ChallengePlaintextSchema>;
 export type ResponsePlaintext = z.output<typeof ResponsePlaintextSchema>;
 export type ResultPlaintext = z.output<typeof ResultPlaintextSchema>;
 
-// ---- JSON codecs. Every failure becomes ProtocolError, never a zod error -----
+// ---- JSON codecs (all failures become ProtocolError) -------------------------
 
 function checkSize(byteLength: number): void {
   if (byteLength > IMPLEMENTATION_LIMITS.MESSAGE_MAX_BYTES) throw new ProtocolError('MALFORMED_MESSAGE');
@@ -154,7 +146,6 @@ function parseWith<S extends z.ZodType>(schema: S, text: string): z.output<S> {
   } catch {
     throw new ProtocolError('MALFORMED_MESSAGE');
   }
-  // JSON.parse output is untrusted; the schema is exactly what validates it.
   const result = z.safeDecode(schema, raw as z.input<S>);
   if (!result.success) throw new ProtocolError('MALFORMED_MESSAGE', safeIssues(result.error));
   return result.data;
@@ -171,7 +162,7 @@ function stringifyWith<S extends z.ZodType>(schema: S, value: z.output<S>): stri
 export const encodeMessage = (m: Message): string => stringifyWith(MessageSchema, m);
 export const decodeMessage = (json: string): Message => parseWith(MessageSchema, json);
 
-/** Inner plaintexts travel as UTF-8 JSON bytes, ready to be sealed with Enc_key. */
+// Plaintexts are UTF-8 JSON bytes, ready for Enc_key.
 export function encodePlaintext<S extends z.ZodType>(schema: S, value: z.output<S>): Uint8Array {
   return utf8Encode(stringifyWith(schema, value));
 }

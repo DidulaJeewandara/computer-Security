@@ -43,11 +43,7 @@ export type FactorType = (typeof FACTOR_TYPES)[number];
 export const OTP_CHANNELS = ['voice', 'haptic'] as const;
 export type OtpChannel = (typeof OTP_CHANNELS)[number];
 
-/**
- * NOT fixed by the shared context. These are this task's own bounds, kept apart
- * from NOTATION so the team can veto them. They exist to bound parser work on
- * unauthenticated input.
- */
+// Our own bounds, not from the shared context. Team can change these.
 export const IMPLEMENTATION_LIMITS = Object.freeze({
   U_ID_MAX_CHARS: 254,
   PASSWORD_MAX_CHARS: 1024,

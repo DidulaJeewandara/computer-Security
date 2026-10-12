@@ -6,3 +6,9 @@
   tests:
     - packages/protocol/src/encode.test.ts   # round trip; no two field triples encode to the same bytes
     - packages/protocol/src/types.test.ts    # round trip of all six messages; unknown fields rejected
+
+# P0-RMR-2 — development certificate authority
+- task: P0-RMR-2
+  discharges: [T3, T4]   # the client validates the chain, so a rogue cert can't sit in the middle of the TLS layer
+  tests:
+    - apps/auth-server/src/tls.test.ts   # untrusted CA, self-signed, wrong host and expired certs rejected; no verification bypass in the repo
