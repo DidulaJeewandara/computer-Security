@@ -1,1 +1,1 @@
-// [M4] axe: zero violations; StepHeading takes focus
+// [WAI] axe: zero violations; StepHeading takes focus

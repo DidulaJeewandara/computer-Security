@@ -1,1 +1,1 @@
-// [M4] Chromium; virtual authenticator enabled
+// [UDK] Chromium; virtual authenticator enabled

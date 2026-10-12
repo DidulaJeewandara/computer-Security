@@ -1,1 +1,1 @@
-// [M5] MsgLabel, wire message shapes, ProtocolError
+// [RMR] Types + zod schemas for the six messages, notation constants, closed set of error codes

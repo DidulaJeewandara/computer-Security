@@ -1,1 +1,1 @@
-// [M2] Announces at 5m / 2m / 1m / 30s ONLY, plus extend (WCAG 2.2.1)
+// [WAI] Announces remaining time at 120 / 60 / 30 s ONLY, never a continuous countdown

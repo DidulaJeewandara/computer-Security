@@ -1,1 +1,1 @@
-// [M4] Never auto-announced; explicit read / download / copy
+// [WAI] NEVER read aloud automatically; explicit read / download / copy, each confirming audibly

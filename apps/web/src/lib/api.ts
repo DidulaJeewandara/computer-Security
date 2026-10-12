@@ -1,1 +1,1 @@
-// [M4] Plain fetch helpers for the non-protocol REST routes
+// [WAI] Plain fetch helpers for the non-protocol REST routes

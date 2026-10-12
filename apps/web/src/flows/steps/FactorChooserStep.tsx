@@ -1,1 +1,1 @@
-// [M4] Radiogroup; only server-returned factors (R4)
+// [WAI] Radiogroup; only server-offered factors, FIDO2 announced as recommended

@@ -1,1 +1,1 @@
-// [M4] Entry point is worded 'I cannot sign in'
+// [WAI] Reachable without the lost factor; replacement enrolled inside the same flow

@@ -1,1 +1,1 @@
-// [M4] Barrel — this is what the other members import
+// [WAI] Barrel — this is what the other members import

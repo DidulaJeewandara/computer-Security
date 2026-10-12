@@ -1,1 +1,1 @@
-// [M4] Paste MUST stay enabled — password managers
+// [WAI] Paste MUST stay enabled — password managers

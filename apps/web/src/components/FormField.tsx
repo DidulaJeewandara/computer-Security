@@ -1,1 +1,1 @@
-// [M4] Real label, aria-describedby, sensitive mode (R6)
+// [WAI] Real label, aria-describedby hint, never a placeholder as a label

@@ -1,1 +1,1 @@
-// [M4] Happy path with the CDP virtual authenticator
+// [DPC] Complete login through the real HTTP stack for each of the three second factors

@@ -1,1 +1,1 @@
-// [M5] Round trip; wrong AAD fails; fresh IV per message
+// [RMR] Known-answer tests; a message replayed in the other direction fails to decrypt

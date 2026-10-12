@@ -1,1 +1,1 @@
-// [M3] User, PasswordCredential, WebAuthnCredential, PhoneAuthenticator, HapticDevice, RecoveryCode, Delegation, AuthEvent
+// [UDK] users, password_credentials, authenticators, recovery_codes, auth_events (append-only, prev_hash), sessions

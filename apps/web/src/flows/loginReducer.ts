@@ -1,1 +1,1 @@
-// [M4] No step is reachable by URL alone
+// [WAI] No step is reachable by URL alone

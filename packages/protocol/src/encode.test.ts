@@ -1,1 +1,1 @@
-// [M5] Round trip; no two field splits collide; label changes bytes
+// [RMR] Round trip; unknown field rejected; no two field triples encode to the same bytes

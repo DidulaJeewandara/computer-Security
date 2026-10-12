@@ -1,1 +1,1 @@
-# WCAG 2.2 Conformance Mapping
+# WCAG 2.2 Conformance Matrix

@@ -1,1 +1,1 @@
-// [M3] Demo accounts: alice (fido2), bob (all factors), carol (voice)
+// [UDK] One account with a password and no second factor

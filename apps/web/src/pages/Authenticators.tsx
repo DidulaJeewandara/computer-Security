@@ -1,1 +1,1 @@
-// [M4] Accessible names include the authenticator name
+// [WAI] Accessible names include the authenticator nickname

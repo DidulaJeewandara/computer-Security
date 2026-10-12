@@ -1,1 +1,1 @@
-// [M2] One input, inputMode numeric, one-time-code; never echoed
+// [WAI] ONE input, inputmode numeric, one-time-code autocomplete, paste allowed

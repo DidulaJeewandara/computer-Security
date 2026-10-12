@@ -1,1 +1,1 @@
-// [M4] navigator.credentials.get; warns about the browser dialog
+// [WAI] navigator.credentials.get; explains the browser prompt BEFORE it appears; timeout announced

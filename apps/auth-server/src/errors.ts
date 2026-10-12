@@ -1,0 +1,1 @@
+// [UDK] Shared typed errors

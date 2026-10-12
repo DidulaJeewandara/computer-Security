@@ -1,1 +1,1 @@
-// [M4] TEMPORARY — delete once lib/protocol-client.ts lands
+// [WAI] TEMPORARY — fixture messages until the real handshake lands

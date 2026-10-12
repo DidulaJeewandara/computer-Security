@@ -1,1 +1,1 @@
-// [M5] Ephemeral RSA-OAEP key + the THREE Step-2 checks
+// [WAI] Ephemeral X25519 key, hello, and the THREE step-2 checks; any failure aborts before a password field renders

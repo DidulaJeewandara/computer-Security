@@ -1,1 +1,1 @@
-// [M4] Router: login, enrol, authenticators, recovery, audit
+// [WAI] App shell: routing, skip link, landmarks, page title on every route change

@@ -1,1 +1,1 @@
-// [M2] axe + the four announcement thresholds
+// [WAI] axe + the three announcement thresholds

@@ -1,1 +1,1 @@
-// [M3] Port 5173; proxy /api and /protocol to localhost:3000
+// [WAI] Dev server; proxies API and protocol routes to the auth server

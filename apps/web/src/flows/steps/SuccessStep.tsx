@@ -1,1 +1,1 @@
-// [M4] Announces 'Signed in'
+// [WAI] Announces 'Signed in'
