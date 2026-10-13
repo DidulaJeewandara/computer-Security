@@ -5,6 +5,7 @@ export default defineConfig({
     include: [
       'packages/protocol/src/{encode,types}.test.ts',
       'apps/auth-server/src/tls.test.ts',
+      'apps/auth-server/src/auth/password.test.ts',
       'apps/auth-server/src/config.test.ts',
       'apps/auth-server/src/app.test.ts',
       'apps/auth-server/src/db/userService.test.ts',
