@@ -38,3 +38,14 @@ back it up separately from the database. Sessions store a digest, never a raw
 session token. The later Redis session manager remains a separate UDK task.
 Audit-event triggers reject updates, deletes and truncation. Production database
 roles must not own tables or have permission to disable triggers.
+
+The HTTPS server exposes `/health` only at this stage. Authentication routes are
+owned by later protocol work. It uses TLS 1.3, a CSP appropriate to a JSON API,
+HSTS, exact-origin CORS and server-generated request IDs. Automatic logs omit
+URLs and headers; structured fields are redacted recursively. Log fixed messages
+with structured data rather than interpolating credentials into message strings.
+
+The root Vitest configuration lists executable suites explicitly because most
+teammate test files are still comment-only placeholders. Add newly implemented
+suites to it. Real database tests opt in separately; the real mkcert certificate
+check runs only when this machine has a generated development certificate.

@@ -31,3 +31,10 @@
   tests:
     - apps/auth-server/src/db/userService.test.ts
     - apps/auth-server/src/db/database.integration.test.ts
+
+- task: P1-UDK-2
+  discharges: [T2, T3, T4]
+  role: transport-and-secret-protection
+  tests:
+    - apps/auth-server/src/app.test.ts
+    - apps/auth-server/src/tls.test.ts

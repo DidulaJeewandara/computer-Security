@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ConfigError, loadConfig } from './config.js';
 
@@ -20,6 +20,10 @@ describe('P0-UDK-2 configuration boundary', () => {
       webOrigin: validEnv.WEB_ORIGIN,
     });
   });
+  it('resolves TLS paths from the repository root independent of the server working directory', () => {
+    expect(loadConfig(validEnv).tlsCertFile).toBe(resolve('keys/auth.deltaforce.lk.pem'));
+    expect(loadConfig(validEnv).tlsKeyFile).toBe(resolve('keys/auth.deltaforce.lk-key.pem'));
+  });
   for (const field of Object.keys(validEnv)) {
     it(`names missing ${field} without revealing other values`, () => {
       const env: Record<string, string> = { ...validEnv };
@@ -37,6 +41,7 @@ describe('P0-UDK-2 configuration boundary', () => {
     ['DATABASE_URL', 'https://example.com'],
     ['REDIS_URL', 'http://example.com'],
     ['WEB_ORIGIN', 'http://localhost:5173'],
+    ['WEB_ORIGIN', 'not-a-url'],
     ['WEB_ORIGIN', 'https://example.com/path'],
     ['PORT', '0'],
     ['PORT', '65536'],

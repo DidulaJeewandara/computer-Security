@@ -3,3 +3,5 @@ node_modules
 dist
 prompt.md
 scaffold.sh
+prisma/schema.prisma
+.env.example
