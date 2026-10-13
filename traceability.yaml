@@ -24,3 +24,10 @@
   role: supporting-infrastructure
   tests:
     - apps/auth-server/src/config.test.ts
+
+- task: P1-UDK-1
+  discharges: [R9, T2]
+  role: supporting-storage
+  tests:
+    - apps/auth-server/src/db/userService.test.ts
+    - apps/auth-server/src/db/database.integration.test.ts

@@ -13,7 +13,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "node tests/platform/scaffold.test.mjs && vitest run",
-    "dev": "pnpm -r --parallel dev"
+    "dev": "pnpm -r --parallel dev",
+    "db:generate": "prisma generate",
+    "db:migrate": "node --env-file=.env node_modules/prisma/build/index.js migrate deploy",
+    "db:seed": "tsx --env-file=.env scripts/seed.ts",
+    "test:integration": "UDK_INTEGRATION=1 vitest run apps/auth-server/src/db/database.integration.test.ts",
+    "postinstall": "prisma generate"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
@@ -23,6 +28,18 @@
     "typescript": "5.9.3",
     "vitest": "3.2.4",
     "@types/node": "22.18.12",
-    "yaml": "2.8.1"
+    "yaml": "2.8.1",
+    "prisma": "6.19.0",
+    "tsx": "4.20.6",
+    "@prisma/client": "6.19.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "argon2",
+      "esbuild"
+    ]
   }
 }

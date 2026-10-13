@@ -1,1 +1,102 @@
-// [UDK] users, password_credentials, authenticators, recovery_codes, auth_events (append-only, prev_hash), sessions
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuthenticatorType {
+  fido2
+  voice
+  haptic
+}
+
+model User {
+  id                          String              @id @default(uuid()) @db.Uuid
+  username                    String              @unique @db.VarChar(128)
+  createdAt                   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  recoveryCodesAcknowledgedAt DateTime?           @map("recovery_codes_acknowledged_at") @db.Timestamptz(6)
+  passwordCredential          PasswordCredential?
+  authenticators              Authenticator[]
+  recoveryCodes               RecoveryCode[]
+  authEvents                  AuthEvent[]
+  sessions                    Session[]
+
+  @@map("users")
+}
+
+model PasswordCredential {
+  userId      String   @id @map("user_id") @db.Uuid
+  hash        String
+  memoryKiB   Int      @map("memory_kib")
+  timeCost    Int      @map("time_cost")
+  parallelism Int
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_credentials")
+}
+
+model Authenticator {
+  id                      String            @id @default(uuid()) @db.Uuid
+  userId                  String            @map("user_id") @db.Uuid
+  type                    AuthenticatorType
+  nickname                String            @db.VarChar(128)
+  publicKey               Bytes?            @map("public_key")
+  credentialIdEncrypted   Bytes?            @map("credential_id_encrypted")
+  credentialIdDigest      String?           @unique @map("credential_id_digest")
+  channelAddressEncrypted Bytes?            @map("channel_address_encrypted")
+  addressHint             String?           @map("address_hint") @db.VarChar(16)
+  signatureCounter        BigInt            @default(0) @map("signature_counter")
+  transports              String[]          @default([])
+  aaguid                  String?
+  createdAt               DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastUsedAt              DateTime?         @map("last_used_at") @db.Timestamptz(6)
+  revokedAt               DateTime?         @map("revoked_at") @db.Timestamptz(6)
+  user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt])
+  @@map("authenticators")
+}
+
+model RecoveryCode {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  hash      String
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  usedAt    DateTime? @map("used_at") @db.Timestamptz(6)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("recovery_codes")
+}
+
+model AuthEvent {
+  id        BigInt   @id @default(autoincrement())
+  userId    String?  @map("user_id") @db.Uuid
+  eventType String   @map("event_type") @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  prevHash  String?  @map("prev_hash") @db.VarChar(64)
+  eventHash String?  @map("event_hash") @db.VarChar(64)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, createdAt])
+  @@map("auth_events")
+}
+
+model Session {
+  id         String            @id @default(uuid()) @db.Uuid
+  tokenHash  String            @unique @map("token_hash") @db.VarChar(64)
+  userId     String            @map("user_id") @db.Uuid
+  factorUsed AuthenticatorType @map("factor_used")
+  issuedAt   DateTime          @default(now()) @map("issued_at") @db.Timestamptz(6)
+  lastSeenAt DateTime          @default(now()) @map("last_seen_at") @db.Timestamptz(6)
+  expiresAt  DateTime          @map("expires_at") @db.Timestamptz(6)
+  revokedAt  DateTime?         @map("revoked_at") @db.Timestamptz(6)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
