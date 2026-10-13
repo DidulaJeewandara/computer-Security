@@ -1,1 +1,3 @@
-// [UDK] Dev server over HTTPS (the Vibration API needs a secure context on a real handset)
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+export default defineConfig({ plugins: [react()] });
