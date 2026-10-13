@@ -46,6 +46,8 @@ export type OtpChannel = (typeof OTP_CHANNELS)[number];
 // Our own bounds, not from the shared context. Team can change these.
 export const IMPLEMENTATION_LIMITS = Object.freeze({
   U_ID_MAX_CHARS: 254,
+  /** NIST SP 800-63B minimum for a password used with a second factor. Counted in code points. */
+  PASSWORD_MIN_CHARS: 8,
   PASSWORD_MAX_CHARS: 1024,
   S_ID_MAX_BYTES: 253,
   MESSAGE_MAX_BYTES: 16 * 1024,

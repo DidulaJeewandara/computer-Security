@@ -88,6 +88,16 @@ describe('verifyPassword', () => {
   });
 });
 
+describe('unicode normalisation', () => {
+  it('verifies the same password typed as NFC or NFD against one hash', async () => {
+    const nfc = 'caf\u00e9 au lait';
+    const nfd = 'cafe\u0301 au lait';
+    expect(nfc).not.toBe(nfd);
+    const hash = await hashPassword(nfc);
+    expect(await verifyPassword(nfd, hash)).toBe(true);
+  });
+});
+
 describe('stored hash parsing', () => {
   const bad = [
     '',

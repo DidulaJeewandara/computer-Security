@@ -3,6 +3,7 @@ import { argon2, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { z } from 'zod';
 import { NOTATION } from '@deltaforce/protocol';
+import { normalizePassword } from './passwordPolicy.js';
 
 const argon2Async = promisify(argon2);
 
@@ -86,7 +87,7 @@ export function parseHash(encoded: string): ParsedHash {
 
 function derive(password: string, salt: Uint8Array, p: Argon2Params): Promise<Buffer> {
   return argon2Async('argon2id', {
-    message: Buffer.from(password, 'utf8'),
+    message: Buffer.from(normalizePassword(password), 'utf8'),
     nonce: salt,
     memory: p.memoryKib,
     passes: p.iterations,
