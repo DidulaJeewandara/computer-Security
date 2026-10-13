@@ -18,3 +18,9 @@
   role: supporting-infrastructure
   tests:
     - tests/platform/scaffold.test.mjs
+
+# P1-RMR-1 — Argon2id password hashing service
+- task: P1-RMR-1
+  discharges: []   # TODO(JDH): fill in the R/T this covers (stolen password hash resistance); definitions are in the design document
+  tests:
+    - apps/auth-server/src/auth/password.test.ts   # weaker hash upgraded at next login and stored parameters change; tampering fails; constant-time compare
