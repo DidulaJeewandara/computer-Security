@@ -18,3 +18,9 @@
   role: supporting-infrastructure
   tests:
     - tests/platform/scaffold.test.mjs
+
+- task: P0-UDK-2
+  discharges: [T3, T4]
+  role: supporting-infrastructure
+  tests:
+    - apps/auth-server/src/config.test.ts
