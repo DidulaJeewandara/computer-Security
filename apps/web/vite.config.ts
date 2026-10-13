@@ -1,1 +1,3 @@
-// [WAI] Dev server; proxies API and protocol routes to the auth server
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+export default defineConfig({ plugins: [react()] });

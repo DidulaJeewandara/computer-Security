@@ -1,1 +1,12 @@
-{ "name": "@deltaforce/policy", "version": "0.0.0", "private": true, "type": "module", "main": "src/index.ts" }
+{
+  "name": "@deltaforce/policy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsc -p tsconfig.json --watch"
+  }
+}
