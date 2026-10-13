@@ -24,3 +24,10 @@
   discharges: []   # TODO(JDH): fill in the R/T this covers (stolen password hash resistance); definitions are in the design document
   tests:
     - apps/auth-server/src/auth/password.test.ts   # weaker hash upgraded at next login and stored parameters change; tampering fails; constant-time compare
+
+# P1-RMR-2 — password and passphrase policy (NIST SP 800-63B)
+- task: P1-RMR-2
+  discharges: []   # TODO(JDH): fill in the R/T this covers (weak and breached password resistance); definitions are in the design document
+  tests:
+    - apps/auth-server/src/auth/passwordPolicy.test.ts   # breached password rejected with a plain explanation; 40-char passphrase with spaces accepted; only a 5-char hash prefix is looked up
+    - apps/auth-server/src/auth/password.test.ts         # NFC and NFD forms of one password verify against the same hash
