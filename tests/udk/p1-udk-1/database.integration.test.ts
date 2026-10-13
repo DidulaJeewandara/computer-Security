@@ -2,10 +2,10 @@ import { execFileSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { verify } from 'argon2';
-import { integrationEnabled, loadConfig } from '../config.js';
-import { createDatabase } from './prisma.js';
-import { createSeedUser } from './seed.js';
-import { authenticatePassword } from './userService.js';
+import { integrationEnabled, loadConfig } from '../../../apps/auth-server/src/config.js';
+import { createDatabase } from '../../../apps/auth-server/src/db/prisma.js';
+import { createSeedUser } from '../../../apps/auth-server/src/db/seed.js';
+import { authenticatePassword } from '../../../apps/auth-server/src/db/userService.js';
 
 const enabled = integrationEnabled();
 describe.skipIf(!enabled)('P1-UDK-1 PostgreSQL acceptance', () => {

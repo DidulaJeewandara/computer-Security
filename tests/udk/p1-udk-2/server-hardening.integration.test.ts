@@ -6,8 +6,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { Writable } from 'node:stream';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { buildApp } from './app.js';
-import { loadConfig } from './config.js';
+import { buildApp } from '../../../apps/auth-server/src/app.js';
+import { loadConfig } from '../../../apps/auth-server/src/config.js';
 let directory: string;
 let config: ReturnType<typeof loadConfig>;
 beforeAll(() => {

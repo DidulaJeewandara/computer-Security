@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ConfigError, loadConfig } from './config.js';
+import { ConfigError, loadConfig } from '../../../apps/auth-server/src/config.js';
 
 export const validEnv = {
   DATABASE_URL: 'postgresql://deltaforce:local-password@localhost:5432/deltaforce',
