@@ -1,0 +1,110 @@
+name: UDK P0-P1 checks
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/udk-p0-p1.yml'
+      - '.env.example'
+      - '.prettierignore'
+      - '.prettierrc.json'
+      - 'README.md'
+      - 'apps/auth-server/package.json'
+      - 'apps/auth-server/src/**'
+      - 'apps/auth-server/tsconfig.json'
+      - 'apps/haptic-sim/package.json'
+      - 'apps/haptic-sim/tsconfig.json'
+      - 'apps/haptic-sim/vite.config.ts'
+      - 'apps/web/package.json'
+      - 'apps/web/tsconfig.json'
+      - 'apps/web/vite.config.ts'
+      - 'docker-compose.yml'
+      - 'eslint.config.js'
+      - 'package.json'
+      - 'packages/*/package.json'
+      - 'packages/*/tsconfig.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'prisma/**'
+      - 'scripts/seed.ts'
+      - 'tests/udk/**'
+      - 'traceability.yaml'
+      - 'tsconfig.base.json'
+      - 'vitest.config.ts'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/udk-p0-p1.yml'
+      - '.env.example'
+      - '.prettierignore'
+      - '.prettierrc.json'
+      - 'README.md'
+      - 'apps/auth-server/package.json'
+      - 'apps/auth-server/src/**'
+      - 'apps/auth-server/tsconfig.json'
+      - 'apps/haptic-sim/package.json'
+      - 'apps/haptic-sim/tsconfig.json'
+      - 'apps/haptic-sim/vite.config.ts'
+      - 'apps/web/package.json'
+      - 'apps/web/tsconfig.json'
+      - 'apps/web/vite.config.ts'
+      - 'docker-compose.yml'
+      - 'eslint.config.js'
+      - 'package.json'
+      - 'packages/*/package.json'
+      - 'packages/*/tsconfig.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'prisma/**'
+      - 'scripts/seed.ts'
+      - 'tests/udk/**'
+      - 'traceability.yaml'
+      - 'tsconfig.base.json'
+      - 'vitest.config.ts'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: udk-p0-p1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: deltaforce_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d deltaforce_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/deltaforce_test
+      REDIS_URL: redis://127.0.0.1:6379
+      WEB_ORIGIN: https://localhost:5173
+      TLS_CERT_FILE: keys/auth.deltaforce.lk.pem
+      TLS_KEY_FILE: keys/auth.deltaforce.lk-key.pem
+      DATA_ENCRYPTION_KEY: abababababababababababababababababababababababababababababababab
+      UDK_INTEGRATION: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.19.2
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test:udk

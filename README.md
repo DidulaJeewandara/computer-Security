@@ -6,7 +6,8 @@ Requires Node.js 20.19+ and pnpm 10.15.1.
 - `pnpm build`: compile all six TypeScript workspaces.
 - `pnpm typecheck`: check workspace types.
 - `pnpm lint`: run ESLint.
-- `pnpm test`: run platform acceptance and unit tests.
+- `pnpm test`: run the repository's implemented test suites.
+- `pnpm test:udk`: run only the UDK P0/P1 tests in `tests/udk`.
 - `pnpm dev`: watch all workspaces during development.
 - `pnpm format` / `pnpm format:check`: format / check formatting.
 
@@ -26,9 +27,8 @@ Database setup (from the repository root):
 2. `pnpm db:migrate` applies committed migrations to the configured database.
 3. Set `SEED_USERNAME` and `SEED_PASSWORD` in `.env`, then `pnpm db:seed`.
    Existing seed accounts are preserved; seeding never resets a password.
-4. Run `node --env-file=.env node_modules/vitest/vitest.mjs run
-apps/auth-server/src/db/database.integration.test.ts` with `UDK_INTEGRATION=1`
-   to exercise real PostgreSQL. The suite creates and drops only a randomly named
+4. Run `pnpm test:integration` with `UDK_INTEGRATION=1` in `.env` to exercise
+   real PostgreSQL. The suite creates and drops only a randomly named
    test schema. Use a dedicated local test database, with schema-creation rights.
 
 Sensitive authenticator identifiers use AES-256-GCM ciphertext and masked hints.
@@ -45,7 +45,8 @@ HSTS, exact-origin CORS and server-generated request IDs. Automatic logs omit
 URLs and headers; structured fields are redacted recursively. Log fixed messages
 with structured data rather than interpolating credentials into message strings.
 
-The root Vitest configuration lists executable suites explicitly because most
-teammate test files are still comment-only placeholders. Add newly implemented
-suites to it. Real database tests opt in separately; the real mkcert certificate
-check runs only when this machine has a generated development certificate.
+UDK tests are grouped by task ID under `tests/udk`. The root Vitest configuration
+lists executable suites explicitly because most teammate test files are still
+comment-only placeholders. Real database tests opt in separately; the real
+mkcert certificate check runs only when this machine has a generated development
+certificate.

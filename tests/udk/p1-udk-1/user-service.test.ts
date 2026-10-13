@@ -5,7 +5,7 @@ import {
   protectIdentifier,
   revealIdentifier,
   prepareAuthenticatorData,
-} from './userService.js';
+} from '../../../apps/auth-server/src/db/userService.js';
 
 describe('P1-UDK-1 database service boundary', () => {
   it('verifies a stored hash through the injected password verifier', async () => {

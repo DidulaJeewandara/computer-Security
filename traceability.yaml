@@ -17,24 +17,25 @@
   discharges: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]
   role: supporting-infrastructure
   tests:
-    - tests/platform/scaffold.test.mjs
+    - tests/udk/p0-udk-1/scaffold.test.mjs
 
 - task: P0-UDK-2
   discharges: [T3, T4]
   role: supporting-infrastructure
   tests:
-    - apps/auth-server/src/config.test.ts
+    - tests/udk/p0-udk-2/config.test.ts
+    - tests/udk/p0-udk-2/services.test.ts
 
 - task: P1-UDK-1
   discharges: [R9, T2]
   role: supporting-storage
   tests:
-    - apps/auth-server/src/db/userService.test.ts
-    - apps/auth-server/src/db/database.integration.test.ts
+    - tests/udk/p1-udk-1/user-service.test.ts
+    - tests/udk/p1-udk-1/database.integration.test.ts
 
 - task: P1-UDK-2
   discharges: [T2, T3, T4]
   role: transport-and-secret-protection
   tests:
-    - apps/auth-server/src/app.test.ts
+    - tests/udk/p1-udk-2/server-hardening.integration.test.ts
     - apps/auth-server/src/tls.test.ts
