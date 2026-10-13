@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const repositoryRoot = fileURLToPath(new URL('../../../', import.meta.url));
 const urlWithProtocols = (protocols: string[]) =>
   z
     .string()
@@ -17,8 +20,12 @@ const schema = z.object({
     .string()
     .url()
     .refine((value) => {
-      const url = new URL(value);
-      return url.protocol === 'https:' && value === url.origin;
+      try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && value === url.origin;
+      } catch {
+        return false;
+      }
     }),
   TLS_CERT_FILE: z.string().min(1),
   TLS_KEY_FILE: z.string().min(1),
@@ -42,8 +49,8 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     databaseUrl: c.DATABASE_URL,
     redisUrl: c.REDIS_URL,
     webOrigin: c.WEB_ORIGIN,
-    tlsCertFile: c.TLS_CERT_FILE,
-    tlsKeyFile: c.TLS_KEY_FILE,
+    tlsCertFile: resolve(repositoryRoot, c.TLS_CERT_FILE),
+    tlsKeyFile: resolve(repositoryRoot, c.TLS_KEY_FILE),
     dataEncryptionKey: c.DATA_ENCRYPTION_KEY,
     host: c.HOST,
     port: c.PORT,
