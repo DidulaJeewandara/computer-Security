@@ -35,6 +35,9 @@ importers:
 
   apps/auth-server:
     dependencies:
+      '@deltaforce/policy':
+        specifier: workspace:*
+        version: link:../../packages/policy
       '@deltaforce/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol

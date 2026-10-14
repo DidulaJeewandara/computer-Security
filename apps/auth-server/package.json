@@ -17,6 +17,7 @@
     "vitest": "^3.2.0"
   },
   "dependencies": {
+    "@deltaforce/policy": "workspace:*",
     "@deltaforce/protocol": "workspace:*",
     "zod": "^4.6.7"
   },

@@ -9,6 +9,8 @@ export default defineConfig({
       'apps/auth-server/src/auth/password.property.test.ts',
       'apps/auth-server/src/auth/passwordPolicy.test.ts',
       'apps/auth-server/src/auth/uniformResponse.test.ts',
+      'apps/auth-server/src/protocol/handshakeAbuse.test.ts',
+      'packages/policy/src/rateLimits.test.ts',
       'apps/auth-server/src/config.test.ts',
       'apps/auth-server/src/app.test.ts',
       'apps/auth-server/src/db/userService.test.ts',

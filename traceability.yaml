@@ -84,6 +84,14 @@
   tests:
     - apps/auth-server/src/auth/uniformResponse.test.ts # 200 requests cannot separate unknown user from wrong password; byte-identical failures
 
+# P2-JDH-2 — handshake abuse controls
+- task: P2-JDH-2
+  status: done
+  discharges: [R10] # rate limit per method: hellos per IP, pending per identity and in total, Argon2id concurrency
+  tests:
+    - apps/auth-server/src/protocol/handshakeAbuse.test.ts # 300k-hello flood stays bounded; alice still logs in during it
+    - packages/policy/src/rateLimits.test.ts
+
 # ---- open: planned work, mapped from prompt.md ------------------------------
 
 # UDK — platform and data
