@@ -77,6 +77,13 @@
   tests:
     - apps/auth-server/src/auth/password.property.test.ts
 
+# P1-JDH-1 — uniform responses and timing equalisation
+- task: P1-JDH-1
+  status: done
+  discharges: [] # user enumeration by timing or error text; not one of R1-R10 / T1-T8 in RT.md
+  tests:
+    - apps/auth-server/src/auth/uniformResponse.test.ts # 200 requests cannot separate unknown user from wrong password; byte-identical failures
+
 # ---- open: planned work, mapped from prompt.md ------------------------------
 
 # UDK — platform and data
