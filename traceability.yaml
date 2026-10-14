@@ -70,6 +70,13 @@
   tests:
     - tests/platform/traceability.test.ts # the pipeline runs this and every other suite
 
+# P1-JDH-2 — hashing property tests and benchmark
+- task: P1-JDH-2
+  status: done
+  discharges: [R1, T1] # tampered or stale stored hashes never verify; salts never repeat
+  tests:
+    - apps/auth-server/src/auth/password.property.test.ts
+
 # ---- open: planned work, mapped from prompt.md ------------------------------
 
 # UDK — platform and data
