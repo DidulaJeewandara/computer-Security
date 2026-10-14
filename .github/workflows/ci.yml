@@ -9,10 +9,16 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch cancels the run it replaces.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  traceability:
-    name: Traceability (every R and T has a linked test)
+  checks:
+    name: Typecheck, lint, unit tests, traceability
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,4 +27,35 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm trace:check
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Unit tests
+        run: pnpm test
+      - name: Traceability (every R and T has a linked test)
+        run: pnpm trace:check
+
+  osv-scanner:
+    name: Dependency vulnerabilities (osv-scanner)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan pnpm-lock.yaml
+        run: >-
+          docker run --rm -v "$PWD:/src:ro" ghcr.io/google/osv-scanner:v2.2.2
+          scan source --lockfile /src/pnpm-lock.yaml
+
+  gitleaks:
+    name: Secret scanning (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # every commit in the pull request is scanned, not only the last one
+      - name: Scan git history
+        run: >-
+          docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.28.0
+          git --redact --verbose --exit-code 1 /repo

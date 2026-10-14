@@ -62,6 +62,14 @@
   tests:
     - tests/platform/traceability.test.ts # unlinking one requirement fails the check and names it
 
+# P0-JDH-2 — CI pipeline
+- task: P0-JDH-2
+  status: done
+  discharges: [R1]
+  role: supporting-infrastructure # gitleaks keeps secrets out of the repo; not evidence for R1 on its own
+  tests:
+    - tests/platform/traceability.test.ts # the pipeline runs this and every other suite
+
 # ---- open: planned work, mapped from prompt.md ------------------------------
 
 # UDK — platform and data
