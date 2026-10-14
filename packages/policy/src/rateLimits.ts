@@ -23,6 +23,21 @@ export const RATE_LIMITS = Object.freeze({
   PASSWORD_VERIFY_CONCURRENCY: 4,
   /** Password checks allowed to wait for a free slot; beyond this they are refused, not queued. */
   PASSWORD_VERIFY_QUEUE: 64,
+  /** OTP sends per identity and channel: a few "call me again" / "replay" requests, then one a minute. */
+  OTP_SEND_PER_CHANNEL: Object.freeze({
+    capacity: 3,
+    refillPerSecond: 1 / 60,
+  }) satisfies BucketLimit,
+  /**
+   * OTP verifies per identity, across pending records, so starting a new login does not buy a
+   * fresh set of guesses. Two logins' worth of the 5 shared attempts, then one a minute.
+   */
+  OTP_VERIFY_PER_IDENTITY: Object.freeze({
+    capacity: 10,
+    refillPerSecond: 1 / 60,
+  }) satisfies BucketLimit,
+  /** OTP verifies per client IP, across every identity it tries. */
+  OTP_VERIFY_PER_IP: Object.freeze({ capacity: 20, refillPerSecond: 0.2 }) satisfies BucketLimit,
   /** Distinct keys (IPs, identities) a limiter remembers; the least recently seen is forgotten first. */
   TRACKED_KEYS_MAX: 50_000,
 });

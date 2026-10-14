@@ -1,3 +1,4 @@
 // [UDK] Barrel: re-exports factorPolicy, rateLimits, lockout
 export * from './rateLimits.js';
-// TODO(UDK-8, JDH-9): export ./factorPolicy.js and ./lockout.js once they have exports.
+export * from './lockout.js';
+// TODO(UDK-8): export ./factorPolicy.js once it has exports.

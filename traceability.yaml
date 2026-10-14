@@ -263,7 +263,7 @@
     - apps/auth-server/src/webauthn/virtualAuthenticator.test.ts
 
 - task: P4-JDH-1
-  status: open
+  status: done
   discharges: [R10, T2] # rate limits per method; attempt counter shared across channels
   tests:
     - packages/policy/src/lockout.test.ts
