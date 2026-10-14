@@ -1,19 +1,39 @@
 # [JDH] R1-R10 and T1-T8 mapped to the task IDs and test names that discharge them
+#
+# Definitions of every R and T are in RT.md. Task IDs are the ones in prompt.md.
+#
+# One row per task:
+#   task:        task ID from prompt.md
+#   status:      done  - merged; every listed test file must exist
+#                open  - not built yet; tests are the planned test files
+#   discharges:  the requirements and threats this task's tests give evidence for
+#   role:        supporting-infrastructure - needed by everything, but not evidence
+#                for any R or T on its own, so it never counts as coverage
+#   tests:       test files (repo-relative); a comment may name the test inside
+#
+# `pnpm trace:check` fails when any R or T has no linked test, when a row has no
+# task ID or no test, or when a done row names a test file that does not exist.
+#
+# Rows marked open are JDH's first mapping from prompt.md. Each owner corrects
+# their own rows when the task lands and flips status to done in the same PR.
 
 # P0-RMR-1 — canonical sigma_s encoding and message schemas
 - task: P0-RMR-1
-  discharges: [T3, T4]   # handshake tampering and Lowe-style substitution: signer and verifier parse the signed bytes identically
+  status: done
+  discharges: [T3, T4] # handshake tampering and Lowe-style substitution: signer and verifier parse the signed bytes identically
   tests:
-    - packages/protocol/src/encode.test.ts   # round trip; no two field triples encode to the same bytes
-    - packages/protocol/src/types.test.ts    # round trip of all six messages; unknown fields rejected
+    - packages/protocol/src/encode.test.ts # round trip; no two field triples encode to the same bytes
+    - packages/protocol/src/types.test.ts # round trip of all six messages; unknown fields rejected
 
 # P0-RMR-2 — development certificate authority
 - task: P0-RMR-2
-  discharges: [T3, T4]   # the client validates the chain, so a rogue cert can't sit in the middle of the TLS layer
+  status: done
+  discharges: [T3, T4] # the client validates the chain, so a rogue cert can't sit in the middle of the TLS layer
   tests:
-    - apps/auth-server/src/tls.test.ts   # untrusted CA, self-signed, wrong host and expired certs rejected; no verification bypass in the repo
+    - apps/auth-server/src/tls.test.ts # untrusted CA, self-signed, wrong host and expired certs rejected; no verification bypass in the repo
 
 - task: P0-UDK-1
+  status: done
   discharges: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10]
   role: supporting-infrastructure
   tests:
@@ -21,13 +41,230 @@
 
 # P1-RMR-1 — Argon2id password hashing service
 - task: P1-RMR-1
-  discharges: []   # TODO(JDH): fill in the R/T this covers (stolen password hash resistance); definitions are in the design document
+  status: done
+  discharges: [R1, T1] # R1: no credential stored in clear; a leaked store holds only Argon2id hashes
   tests:
-    - apps/auth-server/src/auth/password.test.ts   # weaker hash upgraded at next login and stored parameters change; tampering fails; constant-time compare
+    - apps/auth-server/src/auth/password.test.ts # weaker hash upgraded at next login and stored parameters change; tampering fails; constant-time compare
 
 # P1-RMR-2 — password and passphrase policy (NIST SP 800-63B)
 - task: P1-RMR-2
-  discharges: []   # TODO(JDH): fill in the R/T this covers (weak and breached password resistance); definitions are in the design document
+  status: done
+  discharges: [T8] # no composition rules, passphrases and paste allowed: secure without pushing users to unsafe workarounds
   tests:
-    - apps/auth-server/src/auth/passwordPolicy.test.ts   # breached password rejected with a plain explanation; 40-char passphrase with spaces accepted; only a 5-char hash prefix is looked up
-    - apps/auth-server/src/auth/password.test.ts         # NFC and NFD forms of one password verify against the same hash
+    - apps/auth-server/src/auth/passwordPolicy.test.ts # breached password rejected with a plain explanation; 40-char passphrase with spaces accepted; only a 5-char hash prefix is looked up
+    - apps/auth-server/src/auth/password.test.ts # NFC and NFD forms of one password verify against the same hash
+
+# P0-JDH-1 — this matrix and its check
+- task: P0-JDH-1
+  status: done
+  discharges: [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, T1, T2, T3, T4, T5, T6, T7, T8]
+  role: supporting-infrastructure
+  tests:
+    - tests/platform/traceability.test.ts # unlinking one requirement fails the check and names it
+
+# ---- open: planned work, mapped from prompt.md ------------------------------
+
+# UDK — platform and data
+- task: P1-UDK-2
+  status: open
+  discharges: [R1, T1] # redacting log serializer: no credential in clear in logs
+  tests:
+    - apps/auth-server/src/app.test.ts # a posted password appears nowhere in captured log output
+
+- task: P2-UDK-1
+  status: open
+  discharges: [R2, T2] # single-use pending record; terminal records unusable
+  tests:
+    - apps/auth-server/src/db/pendingAuth.test.ts
+
+- task: P2-UDK-2
+  status: open
+  discharges: [R3, T4] # one S_id for signer and RP config
+  tests:
+    - apps/auth-server/src/protocol/serverKey.test.ts
+
+- task: P3-UDK-1
+  status: open
+  discharges: [R2, T2] # atomic single-use nonce_s2 and sigma_u
+  tests:
+    - apps/auth-server/src/db/replayCache.test.ts # fifty parallel submissions, one success
+
+- task: P3-UDK-2
+  status: open
+  discharges: [R4, T3] # server-side factor policy; downgrade attempt rejected and audited
+  tests:
+    - packages/policy/src/factorPolicy.test.ts
+
+- task: P4-UDK-1
+  status: open
+  discharges: [R5, T5] # a private, non-audio channel
+  tests:
+    - apps/auth-server/src/factors/haptic.test.ts
+
+- task: P6-UDK-1
+  status: open
+  discharges: [R9, T7, T8] # two authenticators + recovery codes, enforced server-side
+  tests:
+    - apps/auth-server/src/lifecycle/setupGuard.test.ts
+
+- task: P7-UDK-1
+  status: open
+  discharges: [T8] # accessibility gate in CI
+  tests:
+    - tests/e2e/a11y.spec.ts
+
+# RMR — protocol and cryptography
+- task: P2-RMR-1
+  status: open
+  discharges: [R1, T1] # authenticated encryption, subkey per direction
+  tests:
+    - packages/protocol/src/crypto.test.ts
+
+- task: P2-RMR-2
+  status: open
+  discharges: [R1, R3, T3, T4] # sigma_s covers nonce_u, PKEncKey_u and S_id
+  tests:
+    - apps/auth-server/src/protocol/tunnel.test.ts
+
+- task: P3-RMR-2
+  status: open
+  discharges: [R2, R3, T2, T4] # challenge IS nonce_s2, RP ID IS S_id
+  tests:
+    - apps/auth-server/src/webauthn/assertion.test.ts
+
+- task: P4-RMR-1
+  status: open
+  discharges: [R2, T2, T3] # OTP single use and bound to one pending record
+  tests:
+    - apps/auth-server/src/otp/otpService.test.ts
+
+- task: P6-RMR-1
+  status: open
+  discharges: [R9] # unambiguous Crockford base32 recovery codes
+  tests:
+    - apps/auth-server/src/lifecycle/recoveryCodes.test.ts
+
+- task: P6-RMR-2
+  status: open
+  discharges: [R9, T7] # recovery suspends the lost authenticator first
+  tests:
+    - apps/auth-server/src/lifecycle/recovery.test.ts
+
+- task: P7-RMR-2
+  status: open
+  discharges: [R6, T6] # secrets kept out of DOM attributes and the accessibility tree
+  tests:
+    - apps/web/src/components/components.a11y.test.ts
+
+- task: P8-RMR-1
+  status: open
+  discharges: [R3, T4] # Lowe-style attack fails against ours, succeeds against the control
+  tests:
+    - packages/testkit/src/suites/mitm.test.ts
+
+- task: P8-RMR-2
+  status: open
+  discharges: [R3, T4]
+  tests:
+    - packages/testkit/src/suites/cutAndPaste.test.ts
+    - packages/testkit/src/suites/interleaving.test.ts
+
+# DPC — channels
+- task: P2-DPC-1
+  status: open
+  discharges: [R1, T2] # c2 validated; stale nonce_s rejected before the hash is checked
+  tests:
+    - apps/auth-server/src/protocol/step3.test.ts
+
+- task: P3-DPC-1
+  status: open
+  discharges: [R4, T3] # selection can never add a factor that was not offered
+  tests:
+    - apps/auth-server/src/factors/selection.test.ts
+
+- task: P4-DPC-1
+  status: open
+  discharges: [R8, T8] # digits read one at a time, twice, repeatable
+  tests:
+    - apps/auth-server/src/factors/voice.test.ts
+
+- task: P4-DPC-2
+  status: open
+  discharges: [R5, T5] # vibration encoding: a code delivered without audio
+  tests:
+    - apps/haptic-sim/src/vibration.test.ts
+
+- task: P5-DPC-1
+  status: open
+  discharges: [R3, R8] # complete login for all three second factors
+  tests:
+    - tests/e2e/login.spec.ts
+
+# WAI — front end and accessibility
+- task: P2-WAI-1
+  status: open
+  discharges: [R3, T3, T4] # the three client-side step-2 checks
+  tests:
+    - apps/web/src/lib/protocol-client.test.ts
+
+- task: P4-WAI-1
+  status: open
+  discharges: [R6, R8, T6, T8] # one input, paste allowed, timed announcements
+  tests:
+    - apps/web/src/components/otp/otp.a11y.test.ts
+
+- task: P5-WAI-1
+  status: open
+  discharges: [R10, T7] # accessible recent-activity page
+  tests:
+    - apps/web/src/pages/AuditLog.a11y.test.ts
+
+# JDH — security controls and verification
+- task: P2-JDH-1
+  status: open
+  discharges: [R3, T3, T4]
+  tests:
+    - apps/auth-server/src/protocol/handshake.negative.test.ts
+
+- task: P3-JDH-1
+  status: open
+  discharges: [R2, R3, T2, T4]
+  tests:
+    - apps/auth-server/src/webauthn/virtualAuthenticator.test.ts
+
+- task: P4-JDH-1
+  status: open
+  discharges: [R10, T2] # rate limits per method; attempt counter shared across channels
+  tests:
+    - packages/policy/src/lockout.test.ts
+
+- task: P4-JDH-2
+  status: open
+  discharges: [R2, T2, T5]
+  tests:
+    - apps/auth-server/src/otp/otpAbuse.test.ts
+
+- task: P5-JDH-1
+  status: open
+  discharges: [R10, T7] # hash-chained audit log
+  tests:
+    - apps/auth-server/src/audit/auditLog.test.ts
+
+- task: P6-JDH-1
+  status: open
+  discharges: [R7, T7] # scoped, time-boxed, revocable helper grant
+  tests:
+    - apps/auth-server/src/lifecycle/helperGrant.test.ts
+
+- task: P6-JDH-2
+  status: open
+  discharges: [R4, T7]
+  tests:
+    - apps/auth-server/src/lifecycle/recovery.abuse.test.ts
+
+- task: P8-JDH-2
+  status: open
+  discharges: [T1, T2]
+  tests:
+    - packages/testkit/src/suites/replay.test.ts
+    - packages/testkit/src/suites/eavesdrop.test.ts

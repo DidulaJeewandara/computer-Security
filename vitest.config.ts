@@ -11,6 +11,7 @@ export default defineConfig({
       'apps/auth-server/src/app.test.ts',
       'apps/auth-server/src/db/userService.test.ts',
       'tests/platform/*.integration.test.ts',
+      'tests/platform/traceability.test.ts',
     ],
     testTimeout: 15000,
   },

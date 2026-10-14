@@ -13,15 +13,17 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "node tests/platform/scaffold.test.mjs && vitest run",
-    "dev": "pnpm -r --parallel dev"
+    "dev": "pnpm -r --parallel dev",
+    "trace:check": "node scripts/check-traceability.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
+    "@types/node": "22.18.12",
     "eslint": "9.39.1",
-    "typescript-eslint": "8.46.1",
     "prettier": "3.6.2",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.46.1",
     "vitest": "3.2.4",
-    "@types/node": "22.18.12"
+    "yaml": "2.8.1"
   }
 }
