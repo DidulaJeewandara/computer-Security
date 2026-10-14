@@ -260,7 +260,7 @@
   status: open
   discharges: [R2, R3, T2, T4]
   tests:
-    - apps/auth-server/src/webauthn/virtualAuthenticator.test.ts
+    - tests/e2e/webauthn.spec.ts # fixture runs now; the four server cases are fixme until P3-RMR-1 and P3-RMR-2
 
 - task: P4-JDH-1
   status: done

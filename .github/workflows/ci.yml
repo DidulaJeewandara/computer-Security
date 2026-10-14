@@ -59,3 +59,20 @@ jobs:
         run: >-
           docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.28.0
           git --redact --verbose --exit-code 1 /repo
+
+  e2e:
+    name: End-to-end (Chromium, virtual authenticator)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Playwright
+        run: pnpm test:e2e

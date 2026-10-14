@@ -15,10 +15,12 @@
     "test": "node tests/platform/scaffold.test.mjs && vitest run",
     "dev": "pnpm -r --parallel dev",
     "trace:check": "node scripts/check-traceability.mjs",
-    "bench:argon2": "vitest bench --run apps/auth-server/src/auth/password.bench.ts"
+    "bench:argon2": "vitest bench --run apps/auth-server/src/auth/password.bench.ts",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
+    "@playwright/test": "1.55.1",
     "@types/node": "22.18.12",
     "eslint": "9.39.1",
     "prettier": "3.6.2",
