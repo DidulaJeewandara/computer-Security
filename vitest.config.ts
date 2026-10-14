@@ -12,6 +12,7 @@ export default defineConfig({
       'apps/auth-server/src/protocol/handshakeAbuse.test.ts',
       'packages/policy/src/rateLimits.test.ts',
       'packages/policy/src/lockout.test.ts',
+      'apps/auth-server/src/otp/otpAbuse.test.ts',
       'apps/auth-server/src/config.test.ts',
       'apps/auth-server/src/app.test.ts',
       'apps/auth-server/src/db/userService.test.ts',
