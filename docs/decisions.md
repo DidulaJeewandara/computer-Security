@@ -17,3 +17,11 @@
 - AAD is the message number as a 4-byte big-endian integer.
 - The AES-GCM IV is 12 random bytes per message rather than derived from the message number, because step 5 can be retried under the same key and number.
 - An all-zero X25519 result is rejected, so a low-order public key cannot force a known shared secret.
+
+## Steps 1 and 2 (P2-RMR-2)
+
+- sigma_s is ECDSA P-256 with SHA-256 in the 64-byte IEEE P1363 form (r || s), which is what WebCrypto produces. The signed bytes are the length-prefixed encoding of nonce_u, PKEncKey_u and S_id, and are sent in `signed` so the client can check each field on its own.
+- `verifySigmaS` decodes `signed` before verifying, so only an exact three-field encoding can verify.
+- c1 is sealed with HPKE info `deltaforce/v1 c1` and the signed bytes as AAD. A c1 taken from one handshake does not open in another.
+- `handleHello` takes a `SigmaSigner` and a `PendingStore`. UDK's `serverKey.ts` and `pendingAuth.ts` are meant to implement these; until then the tests use an in-memory key and store. The Fastify route comes with `app.ts`.
+- The `pendingId` is 256 random bits and is returned beside the message for the route to carry. Nothing is looked up by U_id at hello, so the reply is the same whether or not the account exists.
