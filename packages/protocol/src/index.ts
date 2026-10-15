@@ -15,4 +15,5 @@ export {
   sealMessage,
 } from './crypto.js';
 export type { DirectionalKeys, EncKeyPair } from './crypto.js';
+export { C1_INFO, signSigmaS, verifySigmaS } from './sigma.js';
 // TODO(DPC-1): export ./channel.js once it has exports.

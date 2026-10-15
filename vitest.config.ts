@@ -3,8 +3,9 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: [
-      'packages/protocol/src/{encode,types,crypto}.test.ts',
+      'packages/protocol/src/{encode,types,crypto,sigma}.test.ts',
       'apps/auth-server/src/tls.test.ts',
+      'apps/auth-server/src/protocol/tunnel.test.ts',
       'apps/auth-server/src/auth/password.test.ts',
       'apps/auth-server/src/auth/passwordPolicy.test.ts',
       'apps/auth-server/src/config.test.ts',

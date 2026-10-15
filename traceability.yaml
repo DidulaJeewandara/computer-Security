@@ -37,3 +37,10 @@
   discharges: []   # TODO(JDH): fill in the R/T this covers (replay and reflection across directions, c1 confidentiality); definitions are in the design document
   tests:
     - packages/protocol/src/crypto.test.ts   # RFC 9180 and RFC 7748 known answers; a message replayed in the other direction fails to decrypt
+
+# P2-RMR-2 — protocol steps 1 and 2, with channel binding
+- task: P2-RMR-2
+  discharges: [T3, T4]   # sigma_s covers nonce_u, PKEncKey_u and S_id, so a Lowe-style substitution or a nonce-only signature does not verify
+  tests:
+    - packages/protocol/src/sigma.test.ts               # a signature over the nonce alone, or missing S_id or PKEncKey_u, fails verification
+    - apps/auth-server/src/protocol/tunnel.test.ts      # captured transcript shows all three fields inside the signature; c1 opens only with the signed bytes
